@@ -55,7 +55,11 @@ public class AlphaLocal {
                 email = "narek.gevorgyan@rwth-aachen.de"
         )
         public static PlaceSet AlphaLocalDiscovery(PluginContext context, XLog log, MyParameters params) {//, XEventClassifier classifier) {
-			int localWindowSize = params.getLocalWindowSize();
+        	// fix starttime
+			long startTime = System.nanoTime();
+			
+        	
+        	int localWindowSize = params.getLocalWindowSize();
 			int choiceDepth = params.getChoiceDepth();
 			
 			double alpha = params.getAlpha();
@@ -123,17 +127,20 @@ public class AlphaLocal {
         	for (int i = 0; i < EFMatrix[0].length; i++) {
         		for (int j = 0; j <= i; j++) {
         			if (i == j) {
-        				HMMatrix[i][j] = DFMatrix[i][j];
-        				HMMatrixEF[i][j] = EFMatrix[i][j];
-        				HMMatrixWeighted[i][j] = EFMatrixWeighted[i][j];
+        				HMMatrix[i][j] = DFMatrix[i][j] / (DFMatrix[i][j] + 1);
+        				HMMatrixEF[i][j] = EFMatrix[i][j] / (EFMatrix[i][j] + 1);
+        				HMMatrixWeighted[i][j] = EFMatrixWeighted[i][j] / (EFMatrixWeighted[i][j] + 1);
         			} else {
-        				HMMatrix[i][j] = (java.lang.Math.abs(DFMatrix[i][j]) - java.lang.Math.abs(DFMatrix[j][i])) / (java.lang.Math.abs(DFMatrix[i][j]) + java.lang.Math.abs(DFMatrix[j][i]) + 1);
+        				//HMMatrix[i][j] = (java.lang.Math.abs(DFMatrix[i][j]) - java.lang.Math.abs(DFMatrix[j][i])) / (java.lang.Math.abs(DFMatrix[i][j]) + java.lang.Math.abs(DFMatrix[j][i]) + 1);
+        				HMMatrix[i][j] = (DFMatrix[i][j] - DFMatrix[j][i]) / (DFMatrix[i][j] + DFMatrix[j][i] + 1);
         				HMMatrix[j][i] = - HMMatrix[i][j];
         				
-        				HMMatrixEF[i][j] = (java.lang.Math.abs(EFMatrix[i][j]) - java.lang.Math.abs(EFMatrix[j][i])) / (java.lang.Math.abs(EFMatrix[i][j]) + java.lang.Math.abs(EFMatrix[j][i]) + 1);
+        				//HMMatrixEF[i][j] = (java.lang.Math.abs(EFMatrix[i][j]) - java.lang.Math.abs(EFMatrix[j][i])) / (java.lang.Math.abs(EFMatrix[i][j]) + java.lang.Math.abs(EFMatrix[j][i]) + 1);
+        				HMMatrixEF[i][j] = (EFMatrix[i][j] - EFMatrix[j][i]) / (EFMatrix[i][j] + EFMatrix[j][i] + 1);
         				HMMatrixEF[j][i] = - HMMatrixEF[i][j];
         				
-        				HMMatrixWeighted[i][j] = (java.lang.Math.abs(EFMatrixWeighted[i][j]) - java.lang.Math.abs(EFMatrixWeighted[j][i])) / (java.lang.Math.abs(EFMatrixWeighted[i][j]) + java.lang.Math.abs(EFMatrixWeighted[j][i]) + 1);
+        				//HMMatrixWeighted[i][j] = (java.lang.Math.abs(EFMatrixWeighted[i][j]) - java.lang.Math.abs(EFMatrixWeighted[j][i])) / (java.lang.Math.abs(EFMatrixWeighted[i][j]) + java.lang.Math.abs(EFMatrixWeighted[j][i]) + 1);
+        				HMMatrixWeighted[i][j] = (EFMatrixWeighted[i][j] - EFMatrixWeighted[j][i]) / (EFMatrixWeighted[i][j] + EFMatrixWeighted[j][i] + 1);
         				HMMatrixWeighted[j][i] = - HMMatrixWeighted[i][j];
         			}
         		
@@ -142,10 +149,10 @@ public class AlphaLocal {
 
  ///     sequence relation parameters
         	double[][] seq_matrix = new double[classes.size()][classes.size()];
-        	double divider_seq = 0;
+        	double divider_seq = eventsQuantity;
         	
-        	if (normCoeff.equals("sum")) {
-        		divider_seq = eventsQuantity;
+        	if (normCoeff.equals("max")) {
+        		divider_seq = 0;
         	}
         	
         	// add sequence places 
@@ -183,10 +190,10 @@ public class AlphaLocal {
         	}
 ///     choice relation parameters
         	double[][] choice_matrix = new double[classes.size()][classes.size()];
-        	double divider_choice = 0;
+        	double divider_choice = eventsQuantity;
         	
-        	if (normCoeff.equals("sum")) {
-        		divider_choice = eventsQuantity;
+        	if (normCoeff.equals("max")) {
+        		divider_choice = 0;
         	}
         	
         	// add sequence places 
@@ -283,7 +290,9 @@ public class AlphaLocal {
         	}  
 
         	
-        	System.out.println("Number of places: " + places.size()); 
+        	long delta = System.nanoTime() - startTime;
+        	System.out.println("Number of places: " + places.size());
+        	System.out.println("Runtime " + delta / 1e9 + "S");
         	return new PlaceSet(places);
 			
         }
@@ -298,7 +307,7 @@ public class AlphaLocal {
     	   HashMap<Pair, Double> skip_weighted = new HashMap<>();
 
     	   DFAOutput results = new DFAOutput();
-    	   int maxStep = Math.min(trace.size() - startIndex - 1, contexSize);
+    	   int maxStep = Math.min(trace.size() - startIndex - 1, contexSize - 1);
     	   for (int step = 1; step <= maxStep; step++) {
     		   XEventClass from = classes.getClassOf(trace.get(startIndex));
     		   XEventClass to = classes.getClassOf(trace.get(startIndex + step));

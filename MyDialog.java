@@ -177,8 +177,8 @@ public class MyDialog extends JPanel {
 		//////////////// First column
 
 		final NiceSlider sliderWindow = SlickerFactory.instance()
-				.createNiceIntegerSlider("Select context window size", 1,
-						4, 1, Orientation.HORIZONTAL);
+				.createNiceIntegerSlider("Select context window size", 2,
+						7, 2, Orientation.HORIZONTAL);
 		
 
 		ChangeListener listenerWindow = new ChangeListener() {

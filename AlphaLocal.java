@@ -64,7 +64,7 @@ public class AlphaLocal {
 			
 			double alpha = params.getAlpha();
 			double beta = params.getBeta();
-			double groupbs = params.getGroups();
+			//double groupbs = params.getGroups();
 			// boolean choicePatterns = params.isChoicePattern();
 			
 			boolean minimalPlaces = params.isMinimalPlaces();
@@ -242,9 +242,9 @@ public class AlphaLocal {
 
         					if ( k != i && k != j && (seq_matrix[i][k] / divider_seq >= alpha)) {
         						// abs(|c->b| - |b->c|)/(|c->b| + |b->c|+1) < beta
-        						boolean first_choice_constraint = minimalPlaces ? (choice_matrix[j][k] <= beta && choice_matrix[k][j] <= beta) : (java.lang.Math.abs(choice_matrix[j][k] - choice_matrix[k][j]) / divider_choice <= beta);
+        						//boolean first_choice_constraint = minimalPlaces ? (choice_matrix[j][k] <= beta && choice_matrix[k][j] <= beta) : (java.lang.Math.abs(choice_matrix[j][k]) / divider_choice <= beta);
         						// if (java.lang.Math.abs(choice_matrix[j][k] - choice_matrix[k][j]) / divider_choice <= beta)
-        						if (first_choice_constraint) {
+        						if (java.lang.Math.abs(choice_matrix[j][k]) / divider_choice <= (1 - beta)) {
         							Set<Integer> inputIndices = new HashSet<>(Arrays.asList(i));
         							Set<Integer> outputIndices = new HashSet<>(Arrays.asList(j, k));
         							
@@ -257,8 +257,8 @@ public class AlphaLocal {
         					if (k != i && k != j &&  seq_matrix[k][j] / divider_seq >= alpha) {
         						// abs(|c->b| - |b->c|)/(|c->b| + |b->c|+1) < beta
         						// if (java.lang.Math.abs(choice_matrix[i][k]- choice_matrix[k][i]) / divider_choice <= beta)
-        						boolean second_choice_constraint = minimalPlaces ? (choice_matrix[i][k] <= beta && choice_matrix[k][i] <= beta) : (java.lang.Math.abs(choice_matrix[i][k]- choice_matrix[k][i]) / divider_choice <= beta);
-        						if (second_choice_constraint) {
+        						//boolean second_choice_constraint = minimalPlaces ? (choice_matrix[i][k] <= beta && choice_matrix[k][i] <= beta) : (java.lang.Math.abs(choice_matrix[i][k]- choice_matrix[k][i]) / divider_choice <= beta);
+        						if (java.lang.Math.abs(choice_matrix[i][k]) / divider_choice <= (1 - beta)) {
         							Set<Integer> inputIndices = new HashSet<>(Arrays.asList(i, k));
         							Set<Integer> outputIndices = new HashSet<>(Arrays.asList(j));
         							
@@ -291,8 +291,10 @@ public class AlphaLocal {
 
         	
         	long delta = System.nanoTime() - startTime;
+        	System.out.println("===========================================================");
         	System.out.println("Number of places: " + places.size());
         	System.out.println("Runtime " + delta / 1e9 + "S");
+        	System.out.println("===========================================================");
         	return new PlaceSet(places);
 			
         }

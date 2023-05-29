@@ -178,7 +178,7 @@ public class MyDialog extends JPanel {
 
 		final NiceSlider sliderWindow = SlickerFactory.instance()
 				.createNiceIntegerSlider("Select context window size", 2,
-						7, 2, Orientation.HORIZONTAL);
+						14, 2, Orientation.HORIZONTAL);
 		
 
 		ChangeListener listenerWindow = new ChangeListener() {
@@ -232,7 +232,7 @@ public class MyDialog extends JPanel {
 		
 		final NiceSlider sliderBeta = SlickerFactory.instance()
 				.createNiceIntegerSlider("Select choise threshold (%)", 0, 
-						100, 100, Orientation.HORIZONTAL);
+						100, 1, Orientation.HORIZONTAL);
 		
 		ChangeListener listenerBeta = new ChangeListener() {
 
@@ -246,19 +246,19 @@ public class MyDialog extends JPanel {
 		add(sliderBeta, "0, 3");
 		///////////////
 		
-		final NiceSlider sliderGroup = SlickerFactory.instance()
-				.createNiceIntegerSlider("Select percent of most frequent groups (%)", 0, 
-						100, 0, Orientation.HORIZONTAL);
-		
-		ChangeListener listenerGroup = new ChangeListener() {
-
-			public void stateChanged(ChangeEvent e) {
-				parameters.setGroups(sliderGroup.getSlider().getValue() / 100.0);
-			}
-		};
-		
-		sliderGroup.addChangeListener(listenerGroup);
-		listenerGroup.stateChanged(null);
-		add(sliderGroup, "0, 4");
+//		final NiceSlider sliderGroup = SlickerFactory.instance()
+//				.createNiceIntegerSlider("Select percent of most frequent groups (%)", 0, 
+//						100, 0, Orientation.HORIZONTAL);
+//		
+//		ChangeListener listenerGroup = new ChangeListener() {
+//
+//			public void stateChanged(ChangeEvent e) {
+//				parameters.setGroups(sliderGroup.getSlider().getValue() / 100.0);
+//			}
+//		};
+//		
+//		sliderGroup.addChangeListener(listenerGroup);
+//		listenerGroup.stateChanged(null);
+//		add(sliderGroup, "0, 4");
 	}
 }

@@ -25,14 +25,14 @@ public class MyParameters {
 		this.setLocalWindowSize(1);
 		this.setChoiceDepth(3);
 		this.setAlpha(0.01);
-		this.setBeta(1);
+		this.setBeta(0.01);
 		this.setDirectlyFollowed(false);
 		this.setChoicePattern(true);
 		this.setMinimalPlaces(false);
 		this.setSequenceApproach("DF matrix");
 		this.setChoiceApproach("DF matrix");
-		this.setNormCoeff("sum");
-		this.setGroups(0);
+		this.setNormCoeff("max");
+//		this.setGroups(0);
 	}
 
 	public boolean isDirectlyFollowed() {
@@ -107,13 +107,13 @@ public class MyParameters {
 		this.choiceApproach = choiceApproach;
 	}
 
-	public double getGroups() {
-		return groups;
-	}
-
-	public void setGroups(double groups) {
-		this.groups = groups;
-	}
+//	public double getGroups() {
+//		return groups;
+//	}
+//
+//	public void setGroups(double groups) {
+//		this.groups = groups;
+//	}
 
 	public String getNormCoeff() {
 		return normCoeff;

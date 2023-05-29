@@ -40,16 +40,16 @@ public class FileToPlaceSet {
 		while (line != null) {
         	Place newPlace = new Place();
 
-			String[] result = line.replace("(", "").replace(")", "").replace(" ", "").split("\\|");
+			String[] result = line.replace("(", "").replace(")", "").split("\\|");
 			
-			String inputString = result[0];
-        	for (int i = 0; i < inputString.length(); i++) {
-        		newPlace.addInputTransition(new Transition(String.valueOf(inputString.charAt(i)), false));
+			String[] inputString = result[0].replace(" ", "").split("\\#");
+        	for (int i = 0; i < inputString.length; i++) {
+        		newPlace.addInputTransition(new Transition(String.valueOf(inputString[i]), false));
         	}
         	
-			String outputString = result[1];
-        	for (int i = 0; i < outputString.length(); i++) {
-        		newPlace.addOutputTransition(new Transition(String.valueOf(outputString.charAt(i)), false));
+			String[] outputString = result[1].replace(" ", "").split("\\#");
+        	for (int i = 0; i < outputString.length; i++) {
+        		newPlace.addOutputTransition(new Transition(String.valueOf(outputString[i]), false));
         	}
 			
 			places.add(newPlace);
